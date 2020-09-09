@@ -1,0 +1,86 @@
+{% set version = "2.1.11" %}
+
+package:
+  name: libevent
+  version: {{ version }}
+
+source:
+  fn: libevent-{{ version }}.tar.gz
+  url: https://github.com/libevent/libevent/archive/release-{{ version }}-stable.tar.gz
+  sha256: 229393ab2bf0dc94694f21836846b424f3532585bac3468738b7bf752c03901e
+
+build:
+  number: 1
+  run_exports:
+    # https://abi-laboratory.pro/tracker/timeline/libevent/
+    - {{ pin_subpackage('libevent', max_pin='x.x') }}
+
+requirements:
+
+  build:
+    - pkg-config
+    - autoconf
+    - automake
+    - make
+    - libtool
+    - {{ compiler('c') }}
+
+  run:
+    # Will be taken care of by run_exports
+    # - openssl 1.0.*
+
+test:
+  requires:
+    - python {{ python }}
+
+  source_files:
+    - event_rpcgen.py
+    - test/
+
+  commands:
+    # Check for headers.
+    - test -d "${PREFIX}/include/event2"  # [unix]
+
+    # Check for libraries.
+    {% set libs = [
+        "libevent",
+        "libevent_core",
+        "libevent_extra",
+        "libevent_pthreads"
+    ] %}
+
+    {% for each_lib in libs %}
+    - test -f "${PREFIX}/lib/{{ each_lib }}.a"             # [unix]
+    - test -f "${PREFIX}/lib/{{ each_lib }}.so"            # [linux]
+    {% endfor %}
+
+    {% set pkgconfigs = [
+        "libevent",
+        "libevent_pthreads"
+    ] %}
+
+    # Check for pkg-config files.
+    {% for each_pkgconfig in pkgconfigs %}
+    - test -f "${PREFIX}/lib/pkgconfig/{{ each_pkgconfig }}.pc"  # [unix]
+    {% endfor %}
+
+    # Run included Python script.
+    - python event_rpcgen.py test/regress.rpc test/regress.gen.h test/regress.gen.c
+
+about:
+  home: http://libevent.org/
+  license: BSD 3-Clause
+  license_family: BSD
+  license_file: {{ SRC_DIR }}/LICENSE
+  description: |
+    The libevent API provides a mechanism to execute a callback function when
+    a specific event occurs on a file descriptor or after a timeout has been
+    reached. Furthermore, libevent also supports callbacks due to signals or
+    regular timeouts.
+  summary: An event notification library.
+  doc_url: http://www.wangafu.net/~nickm/libevent-1.4/doxygen/html/
+  dev_url: https://github.com/libevent/libevent
+
+extra:
+  recipe-maintainers:
+    - open-ce/open-ce-dev-team
