@@ -38,6 +38,9 @@ requirements:
 test:
   requires:
     - python {{ python }}
+    # Use pins to control cos6/cos7 match
+    - libgcc-ng  {{ libgcc }}
+    - libstdcxx-ng  {{ libstdcxx }}
 
   source_files:
     - event_rpcgen.py
