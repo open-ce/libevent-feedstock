@@ -14,6 +14,9 @@ build:
   run_exports:
     # https://abi-laboratory.pro/tracker/timeline/libevent/
     - {{ pin_subpackage('libevent', max_pin='x.x') }}
+  ignore_run_exports:
+    - libgcc-ng
+    - libstdcxx-ng
 
 requirements:
 
@@ -34,13 +37,13 @@ requirements:
   run:
     # Will be taken care of by run_exports
     # - openssl 1.0.*
+    # Use pins to control cos6/cos7 match
+    - libgcc-ng  {{ libgcc }}
+    - libstdcxx-ng  {{ libstdcxx }}
 
 test:
   requires:
     - python {{ python }}
-    # Use pins to control cos6/cos7 match
-    - libgcc-ng  {{ libgcc }}
-    - libstdcxx-ng  {{ libstdcxx }}
 
   source_files:
     - event_rpcgen.py
