@@ -16,7 +16,6 @@ build:
     - {{ pin_subpackage('libevent', max_pin='x.x') }}
   ignore_run_exports:
     - libgcc-ng
-    - libstdcxx-ng
 
 requirements:
 
@@ -29,17 +28,14 @@ requirements:
     - {{ compiler('c') }}
     # Use pins to control cos6/cos7 match
     - libgcc-ng  {{ libgcc }}
-    - libstdcxx-ng  {{ libstdcxx }}
   host:
     # Use pins to control cos6/cos7 match
     - libgcc-ng  {{ libgcc }}
-    - libstdcxx-ng  {{ libstdcxx }}
   run:
     # Will be taken care of by run_exports
     # - openssl 1.0.*
     # Use pins to control cos6/cos7 match
     - libgcc-ng  {{ libgcc }}
-    - libstdcxx-ng  {{ libstdcxx }}
 
 test:
   requires:
