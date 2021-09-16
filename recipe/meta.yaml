@@ -10,12 +10,10 @@ source:
   sha256: 229393ab2bf0dc94694f21836846b424f3532585bac3468738b7bf752c03901e
 
 build:
-  number: 2
+  number: 3
   run_exports:
     # https://abi-laboratory.pro/tracker/timeline/libevent/
     - {{ pin_subpackage('libevent', max_pin='x.x') }}
-  ignore_run_exports:
-    - libgcc-ng
 
 requirements:
 
@@ -27,15 +25,10 @@ requirements:
     - libtool
     - {{ compiler('c') }}
     # Use pins to control cos6/cos7 match
-    - libgcc-ng  {{ libgcc }}
+    - libgcc-ng  {{ libgcc }}           # [x86_64 and c_compiler_version == "7.2.*"]
   host:
     # Use pins to control cos6/cos7 match
-    - libgcc-ng  {{ libgcc }}
-  run:
-    # Will be taken care of by run_exports
-    # - openssl 1.0.*
-    # Use pins to control cos6/cos7 match
-    - libgcc-ng  {{ libgcc }}
+    - libgcc-ng  {{ libgcc }}           # [x86_64 and c_compiler_version == "7.2.*"]
 
 test:
   requires:
